@@ -8,31 +8,79 @@
 import SwiftUI
 
 struct Line: View {
-    @State var width: Double = 110
-    @State var height: Double = 110
+    
+    @State var waist: Double = 0
     var body: some View {
         VStack {
             Spacer()
-            Path { path in
-                path.move(to: CGPoint(x: 200, y: height*3))
-                path.addLine(to: CGPoint(x: width/2, y: 300))
-                path.addLine(to: CGPoint(x: width, y: height))
-                path.addQuadCurve(to: CGPoint(x: width, y: height+50), control: CGPoint(x: height/2, y: width*2))
+            HStack {
+                Spacer()
+                FrontPanel()
+                    .stroke(lineWidth: 5)
+                    .frame(width: 150)
+                Spacer()
+                BackPanel()
+                    .stroke(lineWidth: 5)
+                    .frame(width: 150)
+                Spacer()
             }
+            
             Spacer()
-            Text("Width")
-            Slider(value: $width, in: 10...200)
-            Text("Height")
-            Slider(value: $height, in: 10...200)
+            
+            Text("Waist")
+            Slider(value: $waist, in: -50...50)
             Button("Reset") {
-                self.height = 110
-                self.width = 110
+                self.waist = 0
+                
             }
         }
         .padding()
     }
+    struct FrontPanel: Shape {
+        
+        
+        func path(in rect: CGRect) -> Path {
+            Path { path in
+                path.move(to: CGPoint(x: rect.maxX/3.5, y: rect.minY))
+                path.addLine(to: CGPoint(x: rect.maxX/1.2, y: rect.minY))
+                path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY/3))
+                path.addLine(to: CGPoint(x: rect.maxX/1.1, y: rect.maxY))
+                path.addLine(to: CGPoint(x: rect.maxX/4.5, y: rect.maxY))
+                path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY/3))
+                path.addQuadCurve(
+                    to: CGPoint(x: rect.maxX/4, y: rect.maxY/3-55),
+                    control: CGPoint(x: rect.maxX/4, y: rect.maxY/3)
+                )
+                path.closeSubpath()
+                
+            }
+        }
+    }
+
+    struct BackPanel: Shape {
+        func path(in rect: CGRect) -> Path {
+            Path { path in
+                
+                path.move(to: CGPoint(x: rect.maxX/1.8, y: rect.minY))
+                path.addLine(to: CGPoint(x: rect.maxX/20, y: rect.minY))
+                path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY/3))
+                path.addLine(to: CGPoint(x: rect.maxX/6, y: rect.maxY))
+                path.addLine(to: CGPoint(x: rect.maxX/1.15, y: rect.maxY))
+                path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY/3))
+                path.addQuadCurve(
+                    to: CGPoint(x: rect.maxX/1.5, y: rect.maxY/3-55),
+                    control: CGPoint(x: rect.maxX/1.4, y: rect.maxY/3)
+                )
+                path.closeSubpath()
+                
+            }
+        }
+    }
+
+    
 }
 
 #Preview {
     Line()
 }
+
