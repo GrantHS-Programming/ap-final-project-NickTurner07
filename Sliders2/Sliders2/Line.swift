@@ -120,17 +120,17 @@ struct BackPanel: Shape {
     
     func path(in rect: CGRect) -> Path {
         Path { path in
-            path.move(to: CGPoint(x: rect.midX+7.5-(Seat*0.125-7.5), y: rect.minY))
-            path.addLine(to: CGPoint(x: rect.midX+7.5-(Seat*0.125-7.5)+Waist*0.25+15, y: rect.minY))
-            path.addLine(to: CGPoint(x: rect.midX+15+(Seat*0.125), y: rect.minY+Rise+riseAdjust))
+            path.move(to: CGPoint(x: rect.midX+15-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25, y: rect.minY-7.5))
+            path.addLine(to: CGPoint(x: rect.midX+15-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25+Waist*0.25+26, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.midX-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25 + (Seat * 0.25+18), y: rect.minY+Rise+riseAdjust))
             path.addLine(to: CGPoint(x: rect.maxX/1.1+openingAdjust, y: rect.maxY+lengthAdjust))
             path.addLine(to: CGPoint(x: rect.maxX/4.5-openingAdjust, y: rect.maxY+lengthAdjust))
             //path.addLine(to: CGPoint(x: rect.midX-(Seat*0.1875), y: rect.minY+Rise+riseAdjust))
             path.addQuadCurve(
-                to: CGPoint(x: rect.midX-Seat*0.1875+Seat*0.1875*0.25, y: rect.minY+Rise+riseAdjust),
+                to: CGPoint(x: rect.midX-(Seat*0.216), y: rect.minY+Rise+riseAdjust+3.75),
                 control: CGPoint(x: rect.maxX/4-openingAdjust, y: rect.maxY+lengthAdjust))
             path.addQuadCurve(
-                to: CGPoint(x: rect.midX-(Seat*0.125-7.5), y: (rect.minY+Rise+riseAdjust)*0.75),
+                to: CGPoint(x: rect.midX-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25, y: (rect.minY+Rise+riseAdjust)*0.75*0.5),
                 control: CGPoint(x: rect.midX-(Seat*0.125-7.5), y: rect.minY+Rise+riseAdjust)
             )
             path.closeSubpath()
