@@ -12,7 +12,7 @@ import Combine
 
 
 struct Line: View {
-    
+    @State var panel = false
     @State var waist: Double = 0
     @State var rise: Double = 0
     @State var seat: Double = 0
@@ -23,14 +23,15 @@ struct Line: View {
             Spacer()
             HStack {
                 Spacer()
-                
-                //FrontPanel(waistAdjust: waist, riseAdjust: rise, seatAdjust: seat, lengthAdjust: length, openingAdjust: opening)
-                //    .stroke(lineWidth: 5)
-                //    .frame(width: 100)
-                //Spacer()
-                BackPanel(waistAdjust: waist, riseAdjust: rise, seatAdjust: seat, lengthAdjust: length, openingAdjust: opening)
-                    .stroke(lineWidth: 5)
-                    .frame(width: 100)
+                if  panel == false {
+                    FrontPanel(waistAdjust: waist, riseAdjust: rise, seatAdjust: seat, lengthAdjust: length, openingAdjust: opening)
+                        .stroke(lineWidth: 5)
+                        .frame(width: 100)
+                } else {
+                    BackPanel(waistAdjust: waist, riseAdjust: rise, seatAdjust: seat, lengthAdjust: length, openingAdjust: opening)
+                        .stroke(lineWidth: 5)
+                        .frame(width: 100)
+                }
                 Spacer()
             }
             
@@ -52,12 +53,20 @@ struct Line: View {
                 Slider(value: $opening, in: -50...50)
             }
                         
-            Button("Reset") {
-                self.waist = 0
-                self.rise = 0
-                self.seat = 0
-                self.length = 0
-                self.opening = 0
+            HStack {
+                Spacer()
+                Toggle(isOn: $panel) {
+                    Text("Show Back")
+                }
+               
+                Button("Reset") {
+                    self.waist = 0
+                    self.rise = 0
+                    self.seat = 0
+                    self.length = 0
+                    self.opening = 0
+                }
+                Spacer()
             }
         }
         .padding()
@@ -76,7 +85,7 @@ let Waist: Double = 450
 let Rise: Double = 150
 let Seat: Double = 600
 let Length: Double = 475
-let Opening: Double = 50
+let Opening: Double = 150
 
 struct FrontPanel: Shape {
     
@@ -91,18 +100,18 @@ struct FrontPanel: Shape {
         
         
         Path { path in
-            path.move(to: CGPoint(x: rect.midX+7.5-(Seat*0.125-7.5), y: rect.minY))
-            path.addLine(to: CGPoint(x: rect.midX+7.5-(Seat*0.125-7.5)+Waist*0.25+15, y: rect.minY))
-            path.addLine(to: CGPoint(x: rect.midX+15+(Seat*0.125), y: rect.minY+Rise+riseAdjust))
-            path.addLine(to: CGPoint(x: rect.maxX/1.1+openingAdjust, y: rect.maxY+lengthAdjust))
-            path.addLine(to: CGPoint(x: rect.maxX/4.5-openingAdjust, y: rect.maxY+lengthAdjust))
+            path.move(to: CGPoint(x: rect.midX+7.5-(Seat*0.125-7.5)-waistAdjust, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.midX+7.5-(Seat*0.125-7.5)+Waist*0.25+15+waistAdjust, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.midX+15+(Seat*0.125) + seatAdjust, y: rect.minY+Rise+riseAdjust))
+            path.addLine(to: CGPoint(x: rect.midX+Opening/2+openingAdjust, y: rect.maxY+lengthAdjust))
+            path.addLine(to: CGPoint(x: rect.midX-Opening/2-openingAdjust, y: rect.maxY+lengthAdjust))
             //path.addLine(to: CGPoint(x: rect.midX-(Seat*0.1875), y: rect.minY+Rise+riseAdjust))
             path.addQuadCurve(
-                to: CGPoint(x: rect.midX-(Seat*0.1875), y: rect.minY+Rise+riseAdjust),
-                control: CGPoint(x: rect.maxX/4-openingAdjust, y: rect.maxY+lengthAdjust))
+                to: CGPoint(x: rect.midX-(Seat*0.1875) - seatAdjust, y: rect.minY+Rise+riseAdjust),
+                control: CGPoint(x: rect.midX-Opening/2-openingAdjust, y: rect.maxY+lengthAdjust))
             path.addQuadCurve(
-                to: CGPoint(x: rect.midX-(Seat*0.125-7.5), y: (rect.minY+Rise+riseAdjust)*0.75),
-                control: CGPoint(x: rect.midX-(Seat*0.125-7.5), y: rect.minY+Rise+riseAdjust)
+                to: CGPoint(x: rect.midX-(Seat*0.125-7.5)-waistAdjust, y: (rect.minY+Rise+riseAdjust)*0.75),
+                control: CGPoint(x: rect.midX-(Seat*0.125-7.5)-waistAdjust, y: rect.minY+Rise+riseAdjust)
             )
             path.closeSubpath()
             
@@ -120,18 +129,18 @@ struct BackPanel: Shape {
     
     func path(in rect: CGRect) -> Path {
         Path { path in
-            path.move(to: CGPoint(x: rect.midX+15-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25, y: rect.minY-7.5))
-            path.addLine(to: CGPoint(x: rect.midX+15-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25+Waist*0.25+26, y: rect.minY))
-            path.addLine(to: CGPoint(x: rect.midX-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25 + (Seat * 0.25+18), y: rect.minY+Rise+riseAdjust))
-            path.addLine(to: CGPoint(x: rect.maxX/1.1+openingAdjust, y: rect.maxY+lengthAdjust))
-            path.addLine(to: CGPoint(x: rect.maxX/4.5-openingAdjust, y: rect.maxY+lengthAdjust))
+            path.move(to: CGPoint(x: rect.midX+15-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25 - waistAdjust, y: rect.minY-7.5))
+            path.addLine(to: CGPoint(x: rect.midX+15-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25+Waist*0.25+26 + waistAdjust, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.midX-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25 + (Seat * 0.25+18) + seatAdjust, y: rect.minY+Rise+riseAdjust))
+            path.addLine(to: CGPoint(x: rect.midX+Opening/2+openingAdjust+11, y: rect.maxY+lengthAdjust))
+            path.addLine(to: CGPoint(x: rect.midX-Opening/2-openingAdjust-11, y: rect.maxY+lengthAdjust))
             //path.addLine(to: CGPoint(x: rect.midX-(Seat*0.1875), y: rect.minY+Rise+riseAdjust))
             path.addQuadCurve(
-                to: CGPoint(x: rect.midX-(Seat*0.216), y: rect.minY+Rise+riseAdjust+3.75),
-                control: CGPoint(x: rect.maxX/4-openingAdjust, y: rect.maxY+lengthAdjust))
+                to: CGPoint(x: rect.midX-(Seat*0.216) - seatAdjust, y: rect.minY+Rise+riseAdjust+3.75),
+                control: CGPoint(x: rect.midX-Opening/2-openingAdjust-11, y: rect.maxY+lengthAdjust))
             path.addQuadCurve(
-                to: CGPoint(x: rect.midX-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25, y: (rect.minY+Rise+riseAdjust)*0.75*0.5),
-                control: CGPoint(x: rect.midX-(Seat*0.125-7.5), y: rect.minY+Rise+riseAdjust)
+                to: CGPoint(x: rect.midX-(Seat*0.125-7.5) + (Seat*0.125-7.5) * 0.25 - waistAdjust, y: (rect.minY+Rise+riseAdjust)*0.75*0.5),
+                control: CGPoint(x: rect.midX-(Seat*0.125-7.5) - waistAdjust, y: rect.minY+Rise+riseAdjust)
             )
             path.closeSubpath()
             
