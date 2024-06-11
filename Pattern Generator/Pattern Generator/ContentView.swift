@@ -1,4 +1,11 @@
 //
+//  ContentView.swift
+//  Pattern Generator
+//
+//  Created by Nick Turner on 6/11/24.
+//
+
+//
 //  Line.swift
 //  Sliders2
 //
@@ -11,7 +18,7 @@ import Combine
 
 
 
-struct Line: View {
+struct ContentView: View {
     @State var panel = false
     @State var waist: Double = 0
     @State var rise: Double = 0
@@ -74,14 +81,10 @@ struct Line: View {
     }
     @MainActor func render() -> URL {
         // 1: Render Hello World with some modifiers
-        let renderer = ImageRenderer(content:
-                                        Text("Hello, world!")
-            .font(.largeTitle)
-            .foregroundStyle(.white)
-            .padding()
-            .background(.blue)
-            .clipShape(Capsule())
-        )
+        let renderer = ImageRenderer(content:FrontPanel(waistAdjust: waist, riseAdjust: rise, seatAdjust: seat, lengthAdjust: length, openingAdjust: opening)
+            .stroke(lineWidth: 5)
+            .frame(width: 100)
+            .frame(height: 300))
         
         // 2: Save it to our documents directory
         let url = URL.documentsDirectory.appending(path: "output.pdf")
@@ -114,7 +117,7 @@ struct Line: View {
 }
 
 #Preview {
-    Line()
+    ContentView()
 }
 
 let Waist: Double = 450
@@ -183,3 +186,4 @@ struct BackPanel: Shape {
         }
     }
 }
+

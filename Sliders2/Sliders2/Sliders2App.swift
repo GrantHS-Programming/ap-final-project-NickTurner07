@@ -11,7 +11,7 @@ import SwiftUI
 struct Sliders2App: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Line()
         }
     }
 }
