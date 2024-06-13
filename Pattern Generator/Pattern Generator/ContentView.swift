@@ -34,20 +34,17 @@ struct ContentView: View {
                 if  panel == false {
                     FrontPanel(waistAdjust: waist, riseAdjust: rise, seatAdjust: seat, lengthAdjust: length, openingAdjust: opening)
                         .stroke(lineWidth: 5)
-                        .frame(width: 100)
+                        .frame(width: 200, height: 450, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 } else {
                     BackPanel(waistAdjust: waist, riseAdjust: rise, seatAdjust: seat, lengthAdjust: length, openingAdjust: opening)
                         .stroke(lineWidth: 5)
-                        .frame(width: 100)
+                        .frame(width: 200, height: 450, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 }
                 Spacer()
             }
-            
             Spacer()
-            
             Text("Waist")
             Slider(value: $waist, in: -50...50)
-            
             HStack {
                 Text("Rise")
                 Slider(value: $rise, in: -50...50)
@@ -60,13 +57,11 @@ struct ContentView: View {
                 Text("Opening")
                 Slider(value: $opening, in: -50...50)
             }
-                        
             HStack {
                 Spacer()
                 Toggle(isOn: $panel) {
                     Text("Show Back")
                 }
-               
                 Button("Reset") {
                     self.waist = 0
                     self.rise = 0
@@ -81,11 +76,22 @@ struct ContentView: View {
     }
     @MainActor func render() -> URL {
         // 1: Render Hello World with some modifiers
-        let renderer = ImageRenderer(content:FrontPanel(waistAdjust: waist, riseAdjust: rise, seatAdjust: seat, lengthAdjust: length, openingAdjust: opening)
-            .stroke(lineWidth: 5)
-            .frame(width: 100)
-            .frame(height: 300))
+        let renderer = ImageRenderer(content:
+                                        HStack {
+            FrontPanel(waistAdjust: waist, riseAdjust: rise, seatAdjust: seat, lengthAdjust: length, openingAdjust: opening)
+                .stroke(lineWidth: 5)
+                .frame(width: 200, height: 450, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                .padding()
+                                         
+            BackPanel(waistAdjust: waist, riseAdjust: rise, seatAdjust: seat, lengthAdjust: length, openingAdjust: opening)
+                .stroke(lineWidth: 5)
+                .frame(width: 200, height: 450, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                .padding()
+            
+        }
         
+                                        
+        )
         // 2: Save it to our documents directory
         let url = URL.documentsDirectory.appending(path: "output.pdf")
         
